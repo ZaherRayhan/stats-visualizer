@@ -1804,8 +1804,7 @@
           }
         } else {
           // Grouped mode: look for pairs like 41-50 5
-          const lines = rawText.split(/
-+/).map(l => l.trim()).filter(Boolean);
+          const lines = rawText.split(/\n+/).map(l => l.trim()).filter(Boolean);
           const pairs = [];
           lines.forEach(line => {
             const m = line.match(/(\d+)\s*[-–—]\s*(\d+)\s+(\d+)/);
