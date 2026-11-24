@@ -1759,8 +1759,7 @@
 
         function parseRawNumbersFromText(text) {
             const cleaned = bnToEnDigits(text || '')
-                .replace(/[
-	]+/g, ' ')
+                .replace(/[\r\n\t]+/g, ' ')
                 .replace(/[,;|]+/g, ' ');
             const matches = cleaned.match(/-?\d+(\.\d+)?/g);
             if (!matches) return [];
