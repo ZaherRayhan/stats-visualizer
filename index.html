@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Statistics Solver & Visualizer | Aamader Gonit</title>
+  <meta name="description" content="Secondary Mathematics Statistics Solver & 2D/3D Visualizer by Aamader Gonit (আমাদের গণিত). Calculate Mean, Median, Mode & draw 2D/3D Histogram, Polygon, Ogive, and Pie Chart." />
+  <meta name="theme-color" content="#1e3a8a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" href="./icon-512.png" />
+  <link rel="apple-touch-icon" href="./icon-512.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', 'Hind Siliguri', sans-serif; background-color: #f8fafc; color: #0f172a; }
+    .math-font { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
+    .canvas-responsive { width: 100%; max-width: 1000px; height: auto; display: block; margin: 0 auto; cursor: zoom-in; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Header -->
+  <header class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
+        <img src="./icon-512.png" alt="Logo" class="w-10 h-10 rounded-xl shadow border border-white/20" />
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 id="app-title" class="text-lg sm:text-xl font-extrabold tracking-tight">Statistics Solver & Visualizer</h1>
+            <span id="badge-level" class="text-[11px] bg-amber-400/20 text-amber-200 border border-amber-300/30 px-2 py-0.5 rounded-full font-semibold">Secondary Mathematics</span>
+          </div>
+          <p class="text-xs text-blue-200">আমাদের গণিত | Aamader Gonit — <span class="italic">সহজভাবে গণিত • যুক্তিতে গণিত • আনন্দে গণিত</span></p>
+        </div>
+      </div>
+
+      <!-- Language Switcher: English First & Default -->
+      <div class="flex items-center gap-2 bg-blue-950/60 p-1 rounded-xl border border-blue-700/50">
+        <button id="btn-lang-en" onclick="setLang('en')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-white text-blue-950 shadow">English</button>
+        <button id="btn-lang-bn" onclick="setLang('bn')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition text-blue-200 hover:text-white">বাংলা</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-5 py-6">
+    <!-- Top Quick Navigation Breadcrumb -->
+    <div id="nav-bar" class="hidden mb-5 flex flex-wrap items-center justify-between gap-2 bg-white p-3 rounded-2xl shadow-sm border border-slate-200">
+      <button onclick="navigate('home')" class="inline-flex items-center gap-1.5 text-sm font-bold text-blue-800 hover:text-blue-600 bg-blue-50 px-3.5 py-1.5 rounded-xl transition">
+        <span>←</span> <span data-i18n="backHome">Dashboard</span>
+      </button>
+      <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
+        <button onclick="navigate('input')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700" data-i18n="menuInput">Data Input</button>
+        <button onclick="navigate('mean')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700" data-i18n="menuMean">Average</button>
+        <button onclick="navigate('median')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700" data-i18n="menuMedian">Median</button>
+        <button onclick="navigate('mode')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700" data-i18n="menuMode">Mode</button>
+        <button onclick="navigate('histogram')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700" data-i18n="menuHist">Histogram</button>
+        <button onclick="navigate('polygon')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700" data-i18n="menuPoly">Frequency Polygon</button>
+        <button onclick="navigate('ogive')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700" data-i18n="menuOgive">Ogive Curve</button>
+        <button onclick="navigate('pie')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700" data-i18n="menuPie">Pie Chart</button>
+      </div>
+    </div>
+
+    <!-- Active Data Status Banner -->
+    <div id="data-status-banner" class="mb-5 bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+      <div class="flex items-center gap-2 text-emerald-900 font-medium">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+        <span id="status-text">Sample dataset active (n = 30). Ready to solve or visualize.</span>
+      </div>
+      <button onclick="navigate('input')" class="text-xs font-bold text-emerald-800 underline hover:text-emerald-950" data-i18n="editData">Edit / Scan Data</button>
+    </div>
+
+    <!-- VIEW: HOME DASHBOARD -->
+    <section id="view-home" class="space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 text-center">
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800" data-i18n="heroTitle">Interactive Statistics Solver & 2D/3D Visualizer</h2>
+        <p class="text-sm text-slate-500 mt-1 max-w-2xl mx-auto" data-i18n="heroSub">Enter data manually or scan from camera/image with selective crop, generate frequency tables, view step-by-step solutions, and draw 2D & 3D statistical graphs.</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <button onclick="navigate('input')" class="group bg-white hover:bg-blue-900 border border-slate-200 hover:border-blue-900 p-5 rounded-3xl shadow-sm transition-all text-left flex flex-col justify-between">
+          <div class="w-12 h-12 rounded-2xl bg-blue-100 group-hover:bg-white/15 text-blue-800 group-hover:text-white flex items-center justify-center text-2xl mb-4">📥</div>
+          <div>
+            <div class="font-extrabold text-base text-slate-800 group-hover:text-white" data-i18n="menuInput">Data Input</div>
+            <div class="text-xs text-slate-500 group-hover:text-blue-200 mt-0.5" data-i18n="subInput">Manual, Camera & Crop OCR</div>
+          </div>
+        </button>
+
+        <button onclick="navigate('mean')" class="group bg-white hover:bg-indigo-900 border border-slate-200 hover:border-indigo-900 p-5 rounded-3xl shadow-sm transition-all text-left flex flex-col justify-between">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-100 group-hover:bg-white/15 text-indigo-800 group-hover:text-white flex items-center justify-center text-2xl mb-4">∑</div>
+          <div>
+            <div class="font-extrabold text-base text-slate-800 group-hover:text-white" data-i18n="menuMean">Average</div>
+            <div class="text-xs text-slate-500 group-hover:text-indigo-200 mt-0.5" data-i18n="subMean">Direct & Step-Deviation</div>
+          </div>
+        </button>
+
+        <button onclick="navigate('median')" class="group bg-white hover:bg-emerald-900 border border-slate-200 hover:border-emerald-900 p-5 rounded-3xl shadow-sm transition-all text-left flex flex-col justify-between">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-100 group-hover:bg-white/15 text-emerald-800 group-hover:text-white flex items-center justify-center text-2xl mb-4">Mₑ</div>
+          <div>
+            <div class="font-extrabold text-base text-slate-800 group-hover:text-white" data-i18n="menuMedian">Median</div>
+            <div class="text-xs text-slate-500 group-hover:text-emerald-200 mt-0.5" data-i18n="subMedian">Formula & Step-by-Step</div>
+          </div>
+        </button>
+
+        <button onclick="navigate('mode')" class="group bg-white hover:bg-amber-800 border border-slate-200 hover:border-amber-800 p-5 rounded-3xl shadow-sm transition-all text-left flex flex-col justify-between">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 group-hover:bg-white/15 text-amber-800 group-hover:text-white flex items-center justify-center text-2xl mb-4">Mₒ</div>
+          <div>
+            <div class="font-extrabold text-base text-slate-800 group-hover:text-white" data-i18n="menuMode">Mode</div>
+            <div class="text-xs text-slate-500 group-hover:text-amber-200 mt-0.5" data-i18n="subMode">Modal Class & Formula</div>
+          </div>
+        </button>
+
+        <button onclick="navigate('histogram')" class="group bg-white hover:bg-sky-900 border border-slate-200 hover:border-sky-900 p-5 rounded-3xl shadow-sm transition-all text-left flex flex-col justify-between">
+          <div class="w-12 h-12 rounded-2xl bg-sky-100 group-hover:bg-white/15 text-sky-800 group-hover:text-white flex items-center justify-center text-2xl mb-4">📊</div>
+          <div>
+            <div class="font-extrabold text-base text-slate-800 group-hover:text-white" data-i18n="menuHist">Histogram</div>
+            <div class="text-xs text-slate-500 group-hover:text-sky-200 mt-0.5" data-i18n="subHist">2D/3D & 3 Continuous Methods</div>
+          </div>
+        </button>
+
+        <button onclick="navigate('polygon')" class="group bg-white hover:bg-rose-900 border border-slate-200 hover:border-rose-900 p-5 rounded-3xl shadow-sm transition-all text-left flex flex-col justify-between">
+          <div class="w-12 h-12 rounded-2xl bg-rose-100 group-hover:bg-white/15 text-rose-800 group-hover:text-white flex items-center justify-center text-2xl mb-4">📈</div>
+          <div>
+            <div class="font-extrabold text-base text-slate-800 group-hover:text-white" data-i18n="menuPoly">Frequency Polygon</div>
+            <div class="text-xs text-slate-500 group-hover:text-rose-200 mt-0.5" data-i18n="subPoly">Mid-Value Line Graph (2D/3D)</div>
+          </div>
+        </button>
+
+        <button onclick="navigate('ogive')" class="group bg-white hover:bg-teal-900 border border-slate-200 hover:border-teal-900 p-5 rounded-3xl shadow-sm transition-all text-left flex flex-col justify-between">
+          <div class="w-12 h-12 rounded-2xl bg-teal-100 group-hover:bg-white/15 text-teal-800 group-hover:text-white flex items-center justify-center text-2xl mb-4">〰️</div>
+          <div>
+            <div class="font-extrabold text-base text-slate-800 group-hover:text-white" data-i18n="menuOgive">Ogive Curve</div>
+            <div class="text-xs text-slate-500 group-hover:text-teal-200 mt-0.5" data-i18n="subOgive">Smooth Freehand Curve (2D/3D)</div>
+          </div>
+        </button>
+
+        <button onclick="navigate('pie')" class="group bg-white hover:bg-purple-900 border border-slate-200 hover:border-purple-900 p-5 rounded-3xl shadow-sm transition-all text-left flex flex-col justify-between">
+          <div class="w-12 h-12 rounded-2xl bg-purple-100 group-hover:bg-white/15 text-purple-800 group-hover:text-white flex items-center justify-center text-2xl mb-4">🥧</div>
+          <div>
+            <div class="font-extrabold text-base text-slate-800 group-hover:text-white" data-i18n="menuPie">Pie Chart</div>
+            <div class="text-xs text-slate-500 group-hover:text-purple-200 mt-0.5" data-i18n="subPie">360° Sector & 3D Cylinder</div>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- VIEW: DATA INPUT -->
+    <section id="view-input" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <h2 class="text-xl font-extrabold text-slate-800" data-i18n="inputTitle">Data Input & Frequency Table Generator</h2>
+          <div class="flex bg-slate-100 p-1 rounded-xl">
+            <button id="tab-ungrouped" onclick="switchInputMode('ungrouped')" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-blue-900 text-white shadow" data-i18n="ungroupedTab">Ungrouped Data</button>
+            <button id="tab-grouped" onclick="switchInputMode('grouped')" class="px-4 py-1.5 rounded-lg text-xs font-bold text-slate-600" data-i18n="groupedTab">Grouped Data</button>
+          </div>
+        </div>
+
+        <!-- Smart Image Input & OCR Bar -->
+        <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-bold text-blue-950" data-i18n="smartImageTitle">Smart Image Input (Selective Crop & Auto-Extract)</h3>
+              <p class="text-xs text-blue-700" data-i18n="smartImageSub">Capture via camera or upload a photo, select the numbers area, and auto-fill or copy data.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="openLiveCamera()" class="inline-flex items-center gap-1.5 bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition">
+                <span>📷</span> <span data-i18n="liveCamera">Live Camera</span>
+              </button>
+              <label class="inline-flex items-center gap-1.5 bg-white hover:bg-slate-50 text-blue-900 border border-blue-300 text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm cursor-pointer transition">
+                <span>🖼️</span> <span data-i18n="uploadImage">Upload Image</span>
+                <input type="file" id="image-file-input" accept="image/*" class="hidden" onchange="handleImageUpload(event)" />
+              </label>
+            </div>
+          </div>
+
+          <!-- OCR Progress Status -->
+          <div id="ocr-status-box" class="hidden bg-white border border-blue-200 rounded-xl p-3 text-xs font-semibold text-blue-900 flex items-center gap-2">
+            <span class="animate-spin inline-block w-4 h-4 border-2 border-blue-700 border-t-transparent rounded-full"></span>
+            <span id="ocr-status-text">Scanning selected image area...</span>
+          </div>
+
+          <!-- Reference Image Viewer + Copy Box -->
+          <div id="ref-image-panel" class="hidden bg-white border border-slate-200 rounded-2xl p-3 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-bold text-slate-700" data-i18n="refImageLabel">Reference Image</span>
+              <div class="flex items-center gap-1.5">
+                <button onclick="reopenCropper()" class="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg text-xs font-bold" data-i18n="reCrop">✂️ Crop Area</button>
+                <button onclick="zoomRefImage(-0.2)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-bold">−</button>
+                <button onclick="resetRefZoom()" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-bold">100%</button>
+                <button onclick="zoomRefImage(0.2)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-bold">+</button>
+                <button onclick="document.getElementById('ref-image-panel').classList.add('hidden')" class="px-2 py-1 bg-rose-50 text-rose-700 rounded-lg text-xs font-bold">✕</button>
+              </div>
+            </div>
+            <div class="overflow-auto max-h-56 border border-slate-100 rounded-xl bg-slate-50 p-2 text-center">
+              <img id="ref-image-preview" src="" alt="Reference" class="inline-block transition-transform origin-top-left max-w-full rounded" />
+            </div>
+            <div id="extracted-copy-bar" class="hidden flex flex-wrap items-center justify-between gap-2 bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+              <div class="text-xs font-mono text-emerald-950 truncate flex-1" id="extracted-text-preview"></div>
+              <button onclick="copyExtractedData()" class="px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold shrink-0" data-i18n="copyData">📋 Copy Data</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- UNGROUPED INPUT PANEL -->
+        <div id="panel-ungrouped" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5" data-i18n="ungroupedLabel">Enter numbers separated by commas or spaces:</label>
+            <textarea id="ungrouped-textarea" rows="3" class="w-full rounded-2xl border border-slate-300 p-3.5 text-sm math-font focus:ring-2 focus:ring-blue-600 focus:outline-none" placeholder="e.g. 67, 80, 69, 88, 74, 65, 72, 85..."></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="classWidthLabel">Class Width (h):</label>
+              <input type="number" id="class-width-input" value="5" min="1" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm math-font font-bold" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="startClassLabel">Starting Lower Limit (Optional):</label>
+              <input type="number" id="start-limit-input" placeholder="Auto" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm math-font" />
+            </div>
+            <div class="flex gap-2">
+              <button onclick="processUngroupedData()" class="flex-1 bg-blue-900 hover:bg-blue-800 text-white font-bold text-sm py-2.5 px-4 rounded-xl shadow transition" data-i18n="generateTableBtn">Generate Table & Save</button>
+              <button onclick="loadSampleData()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 px-3 rounded-xl" data-i18n="sampleBtn">Sample</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUPED INPUT PANEL -->
+        <div id="panel-grouped" class="hidden space-y-4">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 text-xs uppercase">
+                  <th class="p-2.5 border border-slate-200" data-i18n="colClassInterval">Class Interval</th>
+                  <th class="p-2.5 border border-slate-200" data-i18n="colFrequency">Frequency (fᵢ)</th>
+                  <th class="p-2.5 border border-slate-200 w-16">Action</th>
+                </tr>
+              </thead>
+              <tbody id="grouped-rows-body"></tbody>
+            </table>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="addGroupedRow()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs px-4 py-2 rounded-xl" data-i18n="addRowBtn">+ Add Class Row</button>
+            <button onclick="processGroupedData()" class="bg-blue-900 hover:bg-blue-800 text-white font-bold text-sm px-5 py-2 rounded-xl shadow" data-i18n="saveGroupedBtn">Save Grouped Data</button>
+          </div>
+        </div>
+
+        <!-- Generated Frequency Distribution Table -->
+        <div id="generated-table-container" class="pt-4 border-t border-slate-200 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-base font-extrabold text-slate-800" data-i18n="freqTableTitle">Frequency Distribution Table</h3>
+            <span id="table-summary-badge" class="text-xs font-bold bg-blue-100 text-blue-900 px-3 py-1 rounded-full math-font"></span>
+          </div>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full text-xs sm:text-sm text-center border-collapse" id="main-freq-table"></table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW: SOLUTION (MEAN / MEDIAN / MODE) -->
+    <section id="view-solution" class="hidden space-y-5">
+      <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <h2 id="solution-heading" class="text-xl sm:text-2xl font-extrabold text-slate-900"></h2>
+          <div id="mean-method-switch" class="hidden flex bg-slate-100 p-1 rounded-xl text-xs font-bold">
+            <button id="btn-mean-step" onclick="setMeanMethod('step')" class="px-3 py-1.5 rounded-lg bg-blue-900 text-white" data-i18n="stepDeviation">Step-Deviation Method</button>
+            <button id="btn-mean-direct" onclick="setMeanMethod('direct')" class="px-3 py-1.5 rounded-lg text-slate-600" data-i18n="directMethod">Direct Method</button>
+          </div>
+        </div>
+        <div id="solution-content" class="space-y-5 text-sm sm:text-base leading-relaxed text-slate-800"></div>
+      </div>
+    </section>
+
+    <!-- VIEW: CHART (HISTOGRAM / POLYGON / OGIVE / PIE) -->
+    <section id="view-chart" class="hidden space-y-5">
+      <div class="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <h2 id="chart-heading" class="text-xl font-extrabold text-slate-900"></h2>
+            <p class="text-xs text-slate-500 mt-0.5" data-i18n="tapToZoomHint">Tap or click on the graph to open full-screen zoom mode.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- 2D / 3D Toggle -->
+            <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
+              <button id="btn-view-2d" onclick="setChartDimension('2d')" class="px-3 py-1.5 rounded-lg bg-blue-900 text-white shadow-sm transition">2D View</button>
+              <button id="btn-view-3d" onclick="setChartDimension('3d')" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">3D View</button>
+            </div>
+
+            <button onclick="downloadCurrentChart()" class="inline-flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm transition">
+              <span>⬇️</span> <span data-i18n="downloadPng">Download PNG</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Continuous Class Interval Methods (Histogram only) -->
+        <div id="histogram-methods-bar" class="hidden bg-sky-50 border border-sky-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+          <span class="text-xs font-bold text-sky-950" data-i18n="contMethodLabel">Continuous Class Interval Method:</span>
+          <div class="flex flex-wrap gap-1.5 text-xs font-bold math-font">
+            <button id="hist-m-1" onclick="setHistMethod('minus1_0')" class="px-3 py-1.5 rounded-lg bg-sky-800 text-white">(-1, 0)</button>
+            <button id="hist-m-2" onclick="setHistMethod('0_plus1')" class="px-3 py-1.5 rounded-lg bg-white text-sky-900 border border-sky-300">(0, +1)</button>
+            <button id="hist-m-3" onclick="setHistMethod('half')" class="px-3 py-1.5 rounded-lg bg-white text-sky-900 border border-sky-300">(-0.5, +0.5)</button>
+          </div>
+        </div>
+
+        <!-- Responsive Graph Canvas Container -->
+        <div class="w-full overflow-x-auto bg-slate-50 rounded-2xl border border-slate-200 p-2 sm:p-4">
+          <canvas id="main-chart-canvas" width="1000" height="620" onclick="openLightbox()" class="canvas-responsive rounded-xl shadow-sm bg-white"></canvas>
+        </div>
+
+        <!-- Chart Calculation Note / Table -->
+        <div id="chart-notes-box" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs sm:text-sm text-slate-700"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-300 text-xs py-6 mt-10">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="text-center sm:text-left">
+        <p class="font-bold text-white">আমাদের গণিত | Aamader Gonit — Secondary Mathematics / মাধ্যমিক গণিত</p>
+        <p class="text-slate-400 mt-0.5">© 2026 Zaher Rayhan. All rights reserved.</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="document.getElementById('privacy-modal').classList.remove('hidden')" class="underline hover:text-white">Privacy Policy</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL: LIVE CAMERA -->
+  <div id="camera-modal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="font-extrabold text-base text-slate-900" data-i18n="liveCamera">Live Camera</h3>
+        <button onclick="closeLiveCamera()" class="text-slate-500 hover:text-slate-900 font-bold text-lg">✕</button>
+      </div>
+      <div class="relative bg-black rounded-2xl overflow-hidden aspect-video">
+        <video id="camera-video" autoplay playsinline class="w-full h-full object-cover"></video>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button onclick="closeLiveCamera()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold">Cancel</button>
+        <button onclick="captureCameraPhoto()" class="px-5 py-2 rounded-xl bg-blue-900 text-white text-xs font-bold shadow">📸 Capture Photo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: INTERACTIVE SELECTIVE IMAGE CROPPER -->
+  <div id="crop-modal" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-4 sm:p-6 space-y-4 shadow-2xl max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h3 class="font-extrabold text-base sm:text-lg text-slate-900" data-i18n="cropModalTitle">Select Numbers Area to Scan</h3>
+          <p class="text-xs text-slate-500" data-i18n="cropModalSub">Drag across the numbers/table in the image, or use the full image.</p>
+        </div>
+        <button onclick="closeCropModal()" class="text-slate-500 hover:text-slate-900 font-bold text-xl">✕</button>
+      </div>
+      <div class="flex-1 overflow-auto bg-slate-900 rounded-2xl flex items-center justify-center p-2 select-none">
+        <canvas id="crop-canvas" class="max-w-full max-h-[58vh] cursor-crosshair touch-none"></canvas>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2">
+        <button onclick="resetCropSelection()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold" data-i18n="resetSelection">Reset Selection</button>
+        <div class="flex gap-2">
+          <button onclick="processCroppedImage(true)" class="px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold" data-i18n="useFullImage">Use Full Image</button>
+          <button onclick="processCroppedImage(false)" class="px-5 py-2 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold shadow" data-i18n="scanSelected">✂️ Scan Selected Area</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FULLSCREEN GRAPH LIGHTBOX -->
+  <div id="lightbox-modal" class="hidden fixed inset-0 z-50 bg-slate-950/95 flex flex-col">
+    <div class="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-slate-900 text-white border-b border-slate-800">
+      <span id="lightbox-title" class="font-bold text-sm">Chart Preview</span>
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex bg-slate-800 p-0.5 rounded-lg text-xs font-bold">
+          <button id="lb-btn-2d" onclick="setChartDimension('2d')" class="px-2.5 py-1 rounded bg-blue-600 text-white">2D</button>
+          <button id="lb-btn-3d" onclick="setChartDimension('3d')" class="px-2.5 py-1 rounded text-slate-300">3D</button>
+        </div>
+        <button onclick="adjustLightboxZoom(-0.25)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold">−</button>
+        <span id="lb-zoom-label" class="text-xs math-font w-12 text-center">100%</span>
+        <button onclick="adjustLightboxZoom(0.25)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold">+</button>
+        <button onclick="resetLightboxZoom()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold">Reset</button>
+        <button onclick="downloadCurrentChart()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-xs font-bold">PNG</button>
+        <button onclick="closeLightbox()" class="px-3 py-1 bg-rose-600 hover:bg-rose-500 rounded-lg text-xs font-bold">✕</button>
+      </div>
+    </div>
+    <div id="lightbox-viewport" class="flex-1 overflow-auto flex items-center justify-center p-4 cursor-grab active:cursor-grabbing">
+      <img id="lightbox-img" src="" alt="Zoomed Chart" class="transition-transform duration-150 max-w-none rounded-xl shadow-2xl bg-white" />
+    </div>
+  </div>
+
+  <!-- MODAL: PRIVACY POLICY -->
+  <div id="privacy-modal" class="hidden fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="font-extrabold text-lg text-slate-900">Privacy Policy — Aamader Gonit</h3>
+        <button onclick="document.getElementById('privacy-modal').classList.add('hidden')" class="text-slate-500 font-bold text-lg">✕</button>
+      </div>
+      <div class="text-xs sm:text-sm text-slate-600 space-y-3 leading-relaxed">
+        <p><strong>1. Local Data Processing:</strong> Statistics Solver & Visualizer ("আমাদের গণিত | Aamader Gonit") processes all numerical data, camera captures, and OCR text recognition locally on your device. No student data or images are uploaded to external servers.</p>
+        <p><strong>2. Camera & Storage Permissions:</strong> Camera access is used solely when you tap "Live Camera" to scan mathematical tables or numbers from textbooks/notebooks. Downloaded PNG charts are saved directly to your device.</p>
+        <p><strong>3. Educational Purpose:</strong> Designed for Secondary Mathematics students and educators worldwide.</p>
+        <p><strong>4. Contact & Copyright:</strong> © 2026 Zaher Rayhan (Aamader Gonit). All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Register Service Worker for Offline PWA Support
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    // ==================== STATE & I18N ====================
+    let lang = 'en'; // Default English
+    let currentView = 'home';
+    let inputMode = 'ungrouped';
+    let meanMethod = 'step'; // 'step' or 'direct'
+    let chartDim = '2d'; // '2d' or '3d'
+    let histMethod = 'minus1_0'; // 'minus1_0', '0_plus1', 'half'
+    let lbZoom = 1;
+
+    // Dataset State
+    let rawNumbers = [67, 80, 69, 88, 74, 65, 72, 85, 78, 62, 70, 76, 84, 68, 75, 79, 82, 66, 71, 77, 83, 64, 73, 81, 86, 61, 74, 78, 80, 75];
+    let isDataGroupedInput = false;
+    let freqTable = []; // [{ lower, upper, mid, freq, cumFreq, values: [] }]
+    let classWidth = 5;
+
+    const i18n = {
+      en: {
+        backHome: "Dashboard",
+        menuInput: "Data Input",
+        menuMean: "Average",
+        menuMedian: "Median",
+        menuMode: "Mode",
+        menuHist: "Histogram",
+        menuPoly: "Frequency Polygon",
+        menuOgive: "Ogive Curve",
+        menuPie: "Pie Chart",
+        editData: "Edit / Scan Data",
+        heroTitle: "Interactive Statistics Solver & 2D/3D Visualizer",
+        heroSub: "Enter data manually or scan from camera/image with selective crop, generate frequency tables, view step-by-step solutions, and draw 2D & 3D statistical graphs.",
+        subInput: "Manual, Camera & Crop OCR",
+        subMean: "Direct & Step-Deviation",
+        subMedian: "Formula & Step-by-Step",
+        subMode: "Modal Class & Formula",
+        subHist: "2D/3D & 3 Continuous Methods",
+        subPoly: "Mid-Value Line Graph (2D/3D)",
+        subOgive: "Smooth Freehand Curve (2D/3D)",
+        subPie: "360° Sector & 3D Cylinder",
+        inputTitle: "Data Input & Frequency Table Generator",
+        ungroupedTab: "Ungrouped Data",
+        groupedTab: "Grouped Data",
+        smartImageTitle: "Smart Image Input (Selective Crop & Auto-Extract)",
+        smartImageSub: "Capture via camera or upload a photo, select the numbers area, and auto-fill or copy data.",
+        liveCamera: "Live Camera",
+        uploadImage: "Upload Image",
+        refImageLabel: "Reference Image",
+        reCrop: "✂️ Crop Area",
+        copyData: "📋 Copy Data",
+        ungroupedLabel: "Enter numbers separated by commas or spaces:",
+        classWidthLabel: "Class Width (h):",
+        startClassLabel: "Starting Lower Limit (Optional):",
+        generateTableBtn: "Generate Table & Save",
+        sampleBtn: "Sample",
+        colClassInterval: "Class Interval",
+        colFrequency: "Frequency (fᵢ)",
+        addRowBtn: "+ Add Class Row",
+        saveGroupedBtn: "Save Grouped Data",
+        freqTableTitle: "Frequency Distribution Table",
+        stepDeviation: "Step-Deviation Method",
+        directMethod: "Direct Method",
+        tapToZoomHint: "Tap or click on the graph to open full-screen zoom mode.",
+        downloadPng: "Download PNG",
+        contMethodLabel: "Continuous Class Interval Method:",
+        cropModalTitle: "Select Numbers Area to Scan",
+        cropModalSub: "Drag across the numbers/table in the image, or use the full image.",
+        resetSelection: "Reset Selection",
+        useFullImage: "Use Full Image",
+        scanSelected: "✂️ Scan Selected Area"
+      },
+      bn: {
+        backHome: "হোম মেনু",
+        menuInput: "উপাত্ত ইনপুট",
+        menuMean: "গড় নির্ণয়",
+        menuMedian: "মধ্যক নির্ণয়",
+        menuMode: "প্রচুরক নির্ণয়",
+        menuHist: "আয়তলেখ",
+        menuPoly: "গণসংখ্যা বহুভুজ",
+        menuOgive: "অজিভ রেখা",
+        menuPie: "পাই চিত্র",
+        editData: "উপাত্ত পরিবর্তন / স্ক্যান",
+        heroTitle: "পরিসংখ্যান সমাধান ও 2D/3D লেখচিত্র অঙ্কন",
+        heroSub: "হাতে টাইপ করে অথবা ক্যামেরা/ছবি থেকে নির্দিষ্ট অংশ ক্রপ করে উপাত্ত নিন, গণসংখ্যা নিবেশন সারণি তৈরি করুন এবং ধাপে ধাপে সমাধান ও 2D/3D গ্রাফ দেখুন।",
+        subInput: "ম্যানুয়াল, ক্যামেরা ও ক্রপ OCR",
+        subMean: "সংক্ষিপ্ত ও সরাসরি পদ্ধতি",
+        subMedian: "সূত্রসহ ধাপে ধাপে সমাধান",
+        subMode: "প্রচুরক শ্রেণি ও সূত্র",
+        subHist: "2D/3D ও অবিচ্ছিন্ন ৩ পদ্ধতি",
+        subPoly: "মধ্যমান রেখাচিত্র (2D/3D)",
+        subOgive: "মসৃণ ফ্রি-হ্যান্ড বক্ররেখা (2D/3D)",
+        subPie: "360° বৃত্তকলা ও 3D সিলিন্ডার",
+        inputTitle: "উপাত্ত ইনপুট ও গণসংখ্যা নিবেশন সারণি",
+        ungroupedTab: "অবিন্যস্ত উপাত্ত",
+        groupedTab: "বিন্যস্ত উপাত্ত",
+        smartImageTitle: "স্মার্ট ইমেজ ইনপুট (সিলেক্টিভ ক্রপ ও অটো-এক্সট্র্যাক্ট)",
+        smartImageSub: "ক্যামেরা দিয়ে ছবি তুলুন বা আপলোড করুন, সংখ্যার অংশটুকু সিলেক্ট করুন এবং অটো-ফিল বা কপি করুন।",
+        liveCamera: "লাইভ ক্যামেরা",
+        uploadImage: "ছবি আপলোড",
+        refImageLabel: "রেফারেন্স ছবি",
+        reCrop: "✂️ পুনরায় ক্রপ",
+        copyData: "📋 কপি ডাটা",
+        ungroupedLabel: "সংখ্যাগুলো কমা বা স্পেস দিয়ে লিখুন:",
+        classWidthLabel: "শ্রেণি ব্যবধান (Class Width, h):",
+        startClassLabel: "প্রথম শ্রেণির নিম্নসীমা (ঐচ্ছিক):",
+        generateTableBtn: "সারণি তৈরি ও সেভ করুন",
+        sampleBtn: "নমুনা",
+        colClassInterval: "শ্রেণি ব্যাপ্তি",
+        colFrequency: "গণসংখ্যা (fᵢ)",
+        addRowBtn: "+ নতুন শ্রেণি যোগ",
+        saveGroupedBtn: "বিন্যস্ত উপাত্ত সেভ করুন",
+        freqTableTitle: "গণসংখ্যা নিবেশন সারণি",
+        stepDeviation: "সংক্ষিপ্ত পদ্ধতি",
+        directMethod: "সরাসরি পদ্ধতি",
+        tapToZoomHint: "গ্রাফটি বড় করে জুম দেখতে গ্রাফের ওপর স্পর্শ বা ক্লিক করুন।",
+        downloadPng: "PNG ডাউনলোড",
+        contMethodLabel: "অবিচ্ছিন্ন শ্রেণিব্যাপ্তি তৈরির পদ্ধতি:",
+        cropModalTitle: "স্ক্যান করার জন্য নির্দিষ্ট অংশ নির্বাচন করুন",
+        cropModalSub: "ছবির ভেতরের সংখ্যা বা সারণির ওপর ড্র্যাগ করে সিলেক্ট করুন, অথবা পুরো ছবি নিন।",
+        resetSelection: "সিলেকশন মুছুন",
+        useFullImage: "পুরো ছবি নিন",
+        scanSelected: "✂️ নির্বাচিত অংশ স্ক্যান করুন"
+      }
+    };
+
+    function setLang(newLang) {
+      lang = newLang;
+      document.getElementById('btn-lang-en').className = lang === 'en'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-bold transition bg-white text-blue-950 shadow'
+        : 'px-3 py-1.5 rounded-lg text-xs font-bold transition text-blue-200 hover:text-white';
+      document.getElementById('btn-lang-bn').className = lang === 'bn'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-bold transition bg-white text-blue-950 shadow'
+        : 'px-3 py-1.5 rounded-lg text-xs font-bold transition text-blue-200 hover:text-white';
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[lang][key]) el.textContent = i18n[lang][key];
+      });
+
+      updateStatusBanner();
+      renderMainFreqTable();
+      if (['mean', 'median', 'mode'].includes(currentView)) renderSolution(currentView);
+      if (['histogram', 'polygon', 'ogive', 'pie'].includes(currentView)) renderChartView(currentView);
+    }
+
+    function navigate(view) {
+      currentView = view;
+      document.getElementById('nav-bar').classList.toggle('hidden', view === 'home');
+      ['view-home', 'view-input', 'view-solution', 'view-chart'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+
+      if (view === 'home') {
+        document.getElementById('view-home').classList.remove('hidden');
+      } else if (view === 'input') {
+        document.getElementById('view-input').classList.remove('hidden');
+        renderMainFreqTable();
+      } else if (['mean', 'median', 'mode'].includes(view)) {
+        document.getElementById('view-solution').classList.remove('hidden');
+        renderSolution(view);
+      } else if (['histogram', 'polygon', 'ogive', 'pie'].includes(view)) {
+        document.getElementById('view-chart').classList.remove('hidden');
+        renderChartView(view);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==================== DATA PROCESSING ====================
+    function normalizeDigits(str) {
+      const bnDigits = '০১২৩৪৫৬৭৮৯';
+      return str.replace(/[০-৯]/g, d => bnDigits.indexOf(d));
+    }
+
+    function loadSampleData() {
+      rawNumbers = [67, 80, 69, 88, 74, 65, 72, 85, 78, 62, 70, 76, 84, 68, 75, 79, 82, 66, 71, 77, 83, 64, 73, 81, 86, 61, 74, 78, 80, 75];
+      document.getElementById('ungrouped-textarea').value = rawNumbers.join(', ');
+      document.getElementById('class-width-input').value = 5;
+      document.getElementById('start-limit-input').value = '';
+      processUngroupedData();
+    }
+
+    function switchInputMode(mode) {
+      inputMode = mode;
+      document.getElementById('tab-ungrouped').className = mode === 'ungrouped'
+        ? 'px-4 py-1.5 rounded-lg text-xs font-bold bg-blue-900 text-white shadow'
+        : 'px-4 py-1.5 rounded-lg text-xs font-bold text-slate-600';
+      document.getElementById('tab-grouped').className = mode === 'grouped'
+        ? 'px-4 py-1.5 rounded-lg text-xs font-bold bg-blue-900 text-white shadow'
+        : 'px-4 py-1.5 rounded-lg text-xs font-bold text-slate-600';
+      document.getElementById('panel-ungrouped').classList.toggle('hidden', mode !== 'ungrouped');
+      document.getElementById('panel-grouped').classList.toggle('hidden', mode !== 'grouped');
+    }
+
+    function processUngroupedData() {
+      const text = normalizeDigits(document.getElementById('ungrouped-textarea').value);
+      const nums = text.match(/-?\d+(\.\d+)?/g);
+      if (!nums || nums.length === 0) {
+        alert(lang === 'en' ? 'Please enter valid numbers.' : 'অনুগ্রহ করে সঠিক সংখ্যা লিখুন।');
+        return;
+      }
+      rawNumbers = nums.map(Number);
+      // Normalize textarea inline comma-separated
+      document.getElementById('ungrouped-textarea').value = rawNumbers.join(', ');
+
+      const h = parseInt(document.getElementById('class-width-input').value) || 5;
+      classWidth = h > 0 ? h : 5;
+      const minVal = Math.min(...rawNumbers);
+      const maxVal = Math.max(...rawNumbers);
+      const customStart = parseFloat(document.getElementById('start-limit-input').value);
+      let start = !isNaN(customStart) ? customStart : Math.floor(minVal / classWidth) * classWidth;
+      if (start > minVal) start = minVal;
+
+      const classes = [];
+      let cur = start;
+      while (cur <= maxVal) {
+        const upper = cur + classWidth - 1;
+        classes.push({ lower: cur, upper: upper, mid: (cur + upper) / 2, freq: 0, cumFreq: 0, values: [] });
+        cur += classWidth;
+      }
+      if (classes.length === 0) {
+        classes.push({ lower: start, upper: start + classWidth - 1, mid: start + (classWidth - 1) / 2, freq: 0, cumFreq: 0, values: [] });
+      }
+
+      rawNumbers.forEach(val => {
+        for (let c of classes) {
+          if (val >= c.lower && val <= c.upper) {
+            c.freq++;
+            c.values.push(val);
+            break;
+          }
+        }
+      });
+
+      let cum = 0;
+      classes.forEach(c => {
+        cum += c.freq;
+        c.cumFreq = cum;
+      });
+
+      freqTable = classes;
+      isDataGroupedInput = false;
+      populateGroupedEditorFromTable();
+      updateStatusBanner();
+      renderMainFreqTable();
+    }
+
+    function populateGroupedEditorFromTable() {
+      const tbody = document.getElementById('grouped-rows-body');
+      tbody.innerHTML = '';
+      freqTable.forEach(row => addGroupedRow(`${row.lower}-${row.upper}`, row.freq));
+    }
+
+    function addGroupedRow(intervalVal = '', freqVal = '') {
+      const tbody = document.getElementById('grouped-rows-body');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="p-1.5 border border-slate-200"><input type="text" value="${intervalVal}" placeholder="41-50" class="w-full text-center border border-slate-300 rounded-lg py-1.5 math-font font-semibold row-interval" /></td>
+        <td class="p-1.5 border border-slate-200"><input type="number" value="${freqVal}" placeholder="5" min="0" class="w-full text-center border border-slate-300 rounded-lg py-1.5 math-font font-semibold row-freq" /></td>
+        <td class="p-1.5 border border-slate-200 text-center"><button onclick="this.closest('tr').remove()" class="text-rose-600 font-bold px-2">✕</button></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function processGroupedData() {
+      const rows = document.querySelectorAll('#grouped-rows-body tr');
+      const parsed = [];
+      rows.forEach(tr => {
+        const intStr = normalizeDigits(tr.querySelector('.row-interval').value.trim());
+        const fVal = parseInt(normalizeDigits(tr.querySelector('.row-freq').value.trim()));
+        const parts = intStr.split(/[-–—to]+/).map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+        if (parts.length >= 2 && !isNaN(fVal) && fVal >= 0) {
+          parsed.push({ lower: parts[0], upper: parts[1], mid: (parts[0] + parts[1]) / 2, freq: fVal, cumFreq: 0, values: [] });
+        }
+      });
+      if (parsed.length === 0) {
+        alert(lang === 'en' ? 'Please enter valid class intervals and frequencies.' : 'সঠিক শ্রেণিব্যাপ্তি ও গণসংখ্যা দিন।');
+        return;
+      }
+      let cum = 0;
+      parsed.forEach(c => { cum += c.freq; c.cumFreq = cum; });
+      freqTable = parsed;
+      classWidth = parsed[0].upper - parsed[0].lower + 1;
+      isDataGroupedInput = true;
+      rawNumbers = [];
+      updateStatusBanner();
+      renderMainFreqTable();
+    }
+
+    function getTotalN() {
+      return freqTable.reduce((acc, c) => acc + c.freq, 0);
+    }
+
+    function updateStatusBanner() {
+      const n = getTotalN();
+      const typeStr = isDataGroupedInput
+        ? (lang === 'en' ? 'Grouped Data' : 'বিন্যস্ত উপাত্ত')
+        : (lang === 'en' ? 'Ungrouped Data' : 'অবিন্যস্ত উপাত্ত');
+      document.getElementById('status-text').textContent = lang === 'en'
+        ? `Active Dataset: ${typeStr} (n = ${n}, Classes = ${freqTable.length}, Class Width h = ${classWidth})`
+        : `সক্রিয় উপাত্ত: ${typeStr} (n = ${n}, শ্রেণি সংখ্যা = ${freqTable.length}, Class Width h = ${classWidth})`;
+    }
+
+    function renderMainFreqTable() {
+      const n = getTotalN();
+      document.getElementById('table-summary-badge').textContent = `Total n = ${n} | Class Width (h) = ${classWidth}`;
+      const tbl = document.getElementById('main-freq-table');
+      const showDataCol = !isDataGroupedInput;
+
+      let html = `
+        <thead class="bg-blue-950 text-white">
+          <tr>
+            <th class="p-2.5 border border-blue-900">${lang === 'en' ? 'Class Interval' : 'শ্রেণি ব্যাপ্তি'}</th>
+            ${showDataCol ? `<th class="p-2.5 border border-blue-900">${lang === 'en' ? 'Data Values' : 'উপাত্তসমূহ'}</th>` : ''}
+            <th class="p-2.5 border border-blue-900">${lang === 'en' ? 'Mid-Value (xᵢ)' : 'শ্রেণি মধ্যমান (xᵢ)'}</th>
+            <th class="p-2.5 border border-blue-900">${lang === 'en' ? 'Frequency (fᵢ)' : 'গণসংখ্যা (fᵢ)'}</th>
+            <th class="p-2.5 border border-blue-900">${lang === 'en' ? 'Cumulative Freq (Fᶜ)' : 'ক্রমযোজিত গণসংখ্যা (Fᶜ)'}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 bg-white math-font">
+      `;
+
+      freqTable.forEach(c => {
+        const inlineValues = c.values.join(', ');
+        html += `
+          <tr class="hover:bg-blue-50/50">
+            <td class="p-2.5 border border-slate-200 font-bold text-slate-800">${c.lower} - ${c.upper}</td>
+            ${showDataCol ? `<td class="p-2.5 border border-slate-200 text-left text-slate-600 leading-relaxed">${inlineValues || '—'}</td>` : ''}
+            <td class="p-2.5 border border-slate-200">${c.mid}</td>
+            <td class="p-2.5 border border-slate-200 font-bold text-blue-900">${c.freq}</td>
+            <td class="p-2.5 border border-slate-200">${c.cumFreq}</td>
+          </tr>
+        `;
+      });
+
+      html += `
+        <tr class="bg-slate-100 font-extrabold text-slate-900 math-font">
+          <td class="p-2.5 border border-slate-200">${lang === 'en' ? 'Total' : 'মোট'}</td>
+          ${showDataCol ? `<td class="p-2.5 border border-slate-200"></td>` : ''}
+          <td class="p-2.5 border border-slate-200">—</td>
+          <td class="p-2.5 border border-slate-200 text-blue-950">n = ${n}</td>
+          <td class="p-2.5 border border-slate-200">—</td>
+        </tr>
+      </tbody>`;
+      tbl.innerHTML = html;
+    }
+
+    // ==================== STEP-BY-STEP SOLUTIONS ====================
+    function setMeanMethod(m) {
+      meanMethod = m;
+      document.getElementById('btn-mean-step').className = m === 'step' ? 'px-3 py-1.5 rounded-lg bg-blue-900 text-white' : 'px-3 py-1.5 rounded-lg text-slate-600';
+      document.getElementById('btn-mean-direct').className = m === 'direct' ? 'px-3 py-1.5 rounded-lg bg-blue-900 text-white' : 'px-3 py-1.5 rounded-lg text-slate-600';
+      renderSolution('mean');
+    }
+
+    function renderSolution(type) {
+      const heading = document.getElementById('solution-heading');
+      const content = document.getElementById('solution-content');
+      const meanSwitch = document.getElementById('mean-method-switch');
+      meanSwitch.classList.toggle('hidden', type !== 'mean');
+
+      const n = getTotalN();
+      if (n === 0) {
+        content.innerHTML = `<p class="text-rose-600 font-bold">No data available.</p>`;
+        return;
+      }
+
+      if (type === 'mean') {
+        heading.textContent = lang === 'en' ? 'Arithmetic Mean (Average) — Step-by-Step Solution' : 'গাণিতিক গড় নির্ণয় — ধাপে ধাপে সমাধান';
+        let html = '';
+
+        // If ungrouped data exists, show direct ungrouped mean too
+        if (!isDataGroupedInput && rawNumbers.length > 0) {
+          const sumRaw = rawNumbers.reduce((a, b) => a + b, 0);
+          const avgRaw = (sumRaw / rawNumbers.length).toFixed(2);
+          html += `
+            <div class="bg-indigo-50/70 border border-indigo-200 rounded-2xl p-4 space-y-2">
+              <h3 class="font-extrabold text-indigo-950">${lang === 'en' ? '1. Ungrouped Data Direct Mean:' : '১. অবিন্যস্ত উপাত্তের সরাসরি গড়:'}</h3>
+              <p class="math-font">${lang === 'en' ? 'Sum of observations' : 'উপাত্তসমূহের সমষ্টি'} (∑x) = ${sumRaw}</p>
+              <p class="math-font">${lang === 'en' ? 'Total number of observations' : 'মোট উপাত্ত সংখ্যা'} (n) = ${rawNumbers.length}</p>
+              <p class="font-bold text-indigo-900 math-font">${lang === 'en' ? 'Mean' : 'গড়'} = ∑x / n = ${sumRaw} / ${rawNumbers.length} = <span class="text-lg underline">${avgRaw}</span></p>
+            </div>
+          `;
+        }
+
+        if (meanMethod === 'step') {
+          const midIdx = Math.floor(freqTable.length / 2);
+          const a = freqTable[midIdx].mid;
+          const h = classWidth;
+          let sumFiUi = 0;
+
+          let rowsHtml = '';
+          freqTable.forEach(c => {
+            const ui = (c.mid - a) / h;
+            const fiui = c.freq * ui;
+            sumFiUi += fiui;
+            rowsHtml += `
+              <tr>
+                <td class="p-2 border border-slate-200 font-bold">${c.lower} - ${c.upper}</td>
+                <td class="p-2 border border-slate-200">${c.mid}</td>
+                <td class="p-2 border border-slate-200 font-bold text-blue-900">${c.freq}</td>
+                <td class="p-2 border border-slate-200">${Number.isInteger(ui) ? ui : ui.toFixed(2)}</td>
+                <td class="p-2 border border-slate-200 font-semibold">${Number.isInteger(fiui) ? fiui : fiui.toFixed(2)}</td>
+              </tr>
+            `;
+          });
+
+          const meanVal = (a + (sumFiUi / n) * h).toFixed(2);
+          html += `
+            <div class="space-y-3">
+              <h3 class="font-extrabold text-slate-900">${lang === 'en' ? 'Grouped Data Mean (Step-Deviation Method):' : 'বিন্যস্ত উপাত্তের গড় নির্ণয় (সংক্ষিপ্ত পদ্ধতি):'}</h3>
+              <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                <table class="w-full text-xs sm:text-sm text-center border-collapse math-font">
+                  <thead class="bg-blue-950 text-white">
+                    <tr>
+                      <th class="p-2 border border-blue-900">${lang === 'en' ? 'Class Interval' : 'শ্রেণি ব্যাপ্তি'}</th>
+                      <th class="p-2 border border-blue-900">${lang === 'en' ? 'Mid-Value (xᵢ)' : 'মধ্যমান (xᵢ)'}</th>
+                      <th class="p-2 border border-blue-900">${lang === 'en' ? 'Frequency (fᵢ)' : 'গণসংখ্যা (fᵢ)'}</th>
+                      <th class="p-2 border border-blue-900">uᵢ = (xᵢ - a) / h</th>
+                      <th class="p-2 border border-slate-200">fᵢuᵢ</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white">${rowsHtml}</tbody>
+                  <tfoot class="bg-slate-100 font-extrabold">
+                    <tr>
+                      <td colspan="2" class="p-2 border border-slate-200">${lang === 'en' ? 'Total' : 'মোট'}</td>
+                      <td class="p-2 border border-slate-200">n = ${n}</td>
+                      <td class="p-2 border border-slate-200">—</td>
+                      <td class="p-2 border border-slate-200">∑fᵢuᵢ = ${Number.isInteger(sumFiUi) ? sumFiUi : sumFiUi.toFixed(2)}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-1.5 math-font">
+                <p>${lang === 'en' ? 'Assumed Mean' : 'অনুমিত গড়'}, a = ${a}</p>
+                <p>Class Width, h = ${h}</p>
+                <p>n = ${n}, ∑fᵢuᵢ = ${Number.isInteger(sumFiUi) ? sumFiUi : sumFiUi.toFixed(2)}</p>
+                <p class="pt-1 font-bold text-blue-950">${lang === 'en' ? 'Formula:' : 'সূত্র:'} x̄ = a + (∑fᵢuᵢ / n) × h</p>
+                <p>= ${a} + (${Number.isInteger(sumFiUi) ? sumFiUi : sumFiUi.toFixed(2)} / ${n}) × ${h}</p>
+                <p>= ${a} + ${((sumFiUi / n) * h).toFixed(4)}</p>
+                <p class="text-lg font-extrabold text-emerald-800 pt-1">${lang === 'en' ? 'Required Mean' : 'নির্ণেয় গড়'} = ${meanVal}</p>
+              </div>
+            </div>
+          `;
+        } else {
+          let sumFiXi = 0;
+          let rowsHtml = '';
+          freqTable.forEach(c => {
+            const fixi = c.freq * c.mid;
+            sumFiXi += fixi;
+            rowsHtml += `
+              <tr>
+                <td class="p-2 border border-slate-200 font-bold">${c.lower} - ${c.upper}</td>
+                <td class="p-2 border border-slate-200">${c.mid}</td>
+                <td class="p-2 border border-slate-200 font-bold text-blue-900">${c.freq}</td>
+                <td class="p-2 border border-slate-200 font-semibold">${fixi}</td>
+              </tr>
+            `;
+          });
+          const meanVal = (sumFiXi / n).toFixed(2);
+          html += `
+            <div class="space-y-3">
+              <h3 class="font-extrabold text-slate-900">${lang === 'en' ? 'Grouped Data Mean (Direct Method):' : 'বিন্যস্ত উপাত্তের গড় নির্ণয় (সরাসরি পদ্ধতি):'}</h3>
+              <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                <table class="w-full text-xs sm:text-sm text-center border-collapse math-font">
+                  <thead class="bg-blue-950 text-white">
+                    <tr>
+                      <th class="p-2 border border-blue-900">${lang === 'en' ? 'Class Interval' : 'শ্রেণি ব্যাপ্তি'}</th>
+                      <th class="p-2 border border-blue-900">${lang === 'en' ? 'Mid-Value (xᵢ)' : 'মধ্যমান (xᵢ)'}</th>
+                      <th class="p-2 border border-blue-900">${lang === 'en' ? 'Frequency (fᵢ)' : 'গণসংখ্যা (fᵢ)'}</th>
+                      <th class="p-2 border border-blue-900">fᵢxᵢ</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white">${rowsHtml}</tbody>
+                  <tfoot class="bg-slate-100 font-extrabold">
+                    <tr>
+                      <td colspan="2" class="p-2 border border-slate-200">${lang === 'en' ? 'Total' : 'মোট'}</td>
+                      <td class="p-2 border border-slate-200">n = ${n}</td>
+                      <td class="p-2 border border-slate-200">∑fᵢxᵢ = ${sumFiXi}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-1.5 math-font">
+                <p class="font-bold text-blue-950">${lang === 'en' ? 'Formula:' : 'সূত্র:'} x̄ = ∑fᵢxᵢ / n</p>
+                <p>= ${sumFiXi} / ${n}</p>
+                <p class="text-lg font-extrabold text-emerald-800 pt-1">${lang === 'en' ? 'Required Mean' : 'নির্ণেয় গড়'} = ${meanVal}</p>
+              </div>
+            </div>
+          `;
+        }
+        content.innerHTML = html;
+
+      } else if (type === 'median') {
+        heading.textContent = lang === 'en' ? 'Median — Step-by-Step Solution' : 'মধ্যক নির্ণয় — ধাপে ধাপে সমাধান';
+        let html = '';
+
+        // 1. Ungrouped Median with explicit n/2 and (15th term + 16th term) ÷ 2 formula
+        if (!isDataGroupedInput && rawNumbers.length > 0) {
+          const sorted = [...rawNumbers].sort((a, b) => a - b);
+          const un = sorted.length;
+          html += `<div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 space-y-2 math-font">
+            <h3 class="font-extrabold text-emerald-950">${lang === 'en' ? '1. Ungrouped Data Median:' : '১. অবিন্যস্ত উপাত্তের মধ্যক নির্ণয়:'}</h3>
+            <p class="text-xs sm:text-sm text-slate-700">${lang === 'en' ? 'Arranging the data in ascending order:' : 'উপাত্তগুলোকে মানের ঊর্ধ্বক্রমে সাজিয়ে পাই:'}<br><span class="font-semibold text-slate-900">${sorted.join(', ')}</span></p>
+            <p>${lang === 'en' ? 'Here, total number of observations' : 'এখানে, মোট উপাত্ত সংখ্যা'}, n = ${un} (${un % 2 === 0 ? (lang === 'en' ? 'which is an even number' : 'যা একটি জোড় সংখ্যা') : (lang === 'en' ? 'which is an odd number' : 'যা একটি বিজোড় সংখ্যা')})</p>
+          `;
+
+          if (un % 2 === 0) {
+            const k = un / 2;
+            const kNext = k + 1;
+            const term1 = sorted[k - 1];
+            const term2 = sorted[kNext - 1];
+            const medVal = (term1 + term2) / 2;
+            if (lang === 'en') {
+              html += `
+                <p>n/2 = ${un}/2 = ${k}</p>
+                <p class="font-bold text-emerald-950">Therefore, Median = (${k}th term + ${kNext}th term) ÷ 2</p>
+                <p>= (${term1} + ${term2}) ÷ 2</p>
+                <p>= ${term1 + term2} ÷ 2</p>
+                <p class="text-lg font-extrabold text-emerald-800">Required Median = ${medVal}</p>
+              `;
+            } else {
+              html += `
+                <p>n/2 = ${un}/2 = ${k}</p>
+                <p class="font-bold text-emerald-950">সুতরাং মধ্যক = (${k} তম পদ + ${kNext} তম পদ) ÷ 2</p>
+                <p>= (${term1} + ${term2}) ÷ 2</p>
+                <p>= ${term1 + term2} ÷ 2</p>
+                <p class="text-lg font-extrabold text-emerald-800">নির্ণেয় মধ্যক = ${medVal}</p>
+              `;
+            }
+          } else {
+            const pos = (un + 1) / 2;
+            const medVal = sorted[pos - 1];
+            if (lang === 'en') {
+              html += `
+                <p class="font-bold text-emerald-950">Therefore, Median = (n + 1)/2 th term = (${un} + 1)/2 th term = ${pos}th term</p>
+                <p class="text-lg font-extrabold text-emerald-800">Required Median = ${medVal}</p>
+              `;
+            } else {
+              html += `
+                <p class="font-bold text-emerald-950">সুতরাং মধ্যক = (n + 1)/2 তম পদ = (${un} + 1)/2 তম পদ = ${pos} তম পদ</p>
+                <p class="text-lg font-extrabold text-emerald-800">নির্ণেয় মধ্যক = ${medVal}</p>
+              `;
+            }
+          }
+          html += `</div>`;
+        }
+
+        // 2. Grouped Median
+        const halfN = n / 2;
+        let medIdx = freqTable.findIndex(c => c.cumFreq >= halfN);
+        if (medIdx === -1) medIdx = 0;
+        const medClass = freqTable[medIdx];
+        const L = medClass.lower;
+        const fc = medIdx > 0 ? freqTable[medIdx - 1].cumFreq : 0;
+        const fm = medClass.freq;
+        const h = classWidth;
+        const medianGrouped = (L + ((halfN - fc) / fm) * h).toFixed(2);
+
+        html += `
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 math-font">
+            <h3 class="font-extrabold text-slate-900">${lang === 'en' ? 'Grouped Data Median (Using Formula):' : 'বিন্যস্ত উপাত্তের মধ্যক নির্ণয় (সূত্রের সাহায্যে):'}</h3>
+            <p>${lang === 'en' ? 'Here' : 'এখানে'}, n = ${n} ⇒ n/2 = ${n}/2 = ${halfN}</p>
+            <p>${lang === 'en'
+              ? `The cumulative frequency just greater than or equal to ${halfN} is ${medClass.cumFreq}, which lies in the class <strong>${medClass.lower} - ${medClass.upper}</strong>.`
+              : `${halfN} এর ঠিক পরবর্তী ক্রমযোজিত গণসংখ্যা হলো ${medClass.cumFreq}, যা <strong>${medClass.lower} - ${medClass.upper}</strong> শ্রেণিতে অবস্থিত।`}</p>
+            <p>${lang === 'en' ? 'So, Median Class' : 'সুতরাং, মধ্যক শ্রেণি'} = ${medClass.lower} - ${medClass.upper}</p>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700">
+              <li>${lang === 'en' ? 'Lower limit of median class' : 'মধ্যক শ্রেণির নিম্নসীমা'}, L = ${L}</li>
+              <li>${lang === 'en' ? 'Cumulative frequency of pre-median class' : 'মধ্যক শ্রেণির পূর্ববর্তী শ্রেণির ক্রমযোজিত গণসংখ্যা'}, Fᶜ = ${fc}</li>
+              <li>${lang === 'en' ? 'Frequency of median class' : 'মধ্যক শ্রেণির গণসংখ্যা'}, fₘ = ${fm}</li>
+              <li>Class Width, h = ${h}</li>
+            </ul>
+            <p class="pt-2 font-bold text-blue-950">${lang === 'en' ? 'Formula:' : 'সূত্র:'} Median = L + (n/2 - Fᶜ) × (h / fₘ)</p>
+            <p>= ${L} + (${halfN} - ${fc}) × (${h} / ${fm})</p>
+            <p>= ${L} + ${(halfN - fc)} × ${(h / fm).toFixed(4)}</p>
+            <p>= ${L} + ${(((halfN - fc) * h) / fm).toFixed(4)}</p>
+            <p class="text-lg font-extrabold text-emerald-800 pt-1">${lang === 'en' ? 'Required Median' : 'নির্ণেয় মধ্যক'} = ${medianGrouped}</p>
+          </div>
+        `;
+        content.innerHTML = html;
+
+      } else if (type === 'mode') {
+        heading.textContent = lang === 'en' ? 'Mode — Step-by-Step Solution' : 'প্রচুরক নির্ণয় — ধাপে ধাপে সমাধান';
+        let html = '';
+
+        // Ungrouped Mode
+        if (!isDataGroupedInput && rawNumbers.length > 0) {
+          const counts = {};
+          let maxC = 0;
+          rawNumbers.forEach(x => { counts[x] = (counts[x] || 0) + 1; if (counts[x] > maxC) maxC = counts[x]; });
+          const modes = Object.keys(counts).filter(k => counts[k] === maxC);
+          html += `
+            <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 space-y-1.5 math-font">
+              <h3 class="font-extrabold text-amber-950">${lang === 'en' ? '1. Ungrouped Data Mode:' : '১. অবিন্যস্ত উপাত্তের প্রচুরক:'}</h3>
+              <p>${lang === 'en'
+                ? `The value(s) appearing most frequently (${maxC} times): <strong>${modes.join(', ')}</strong>`
+                : `উপাত্তসমূহের মধ্যে সর্বাধিক (${maxC} বার) উপস্থাপিত সংখ্যাটি হলো: <strong>${modes.join(', ')}</strong>`}</p>
+            </div>
+          `;
+        }
+
+        // Grouped Mode
+        let maxIdx = 0;
+        freqTable.forEach((c, idx) => { if (c.freq > freqTable[maxIdx].freq) maxIdx = idx; });
+        const modalClass = freqTable[maxIdx];
+        const L = modalClass.lower;
+        const prevFreq = maxIdx > 0 ? freqTable[maxIdx - 1].freq : 0;
+        const nextFreq = maxIdx < freqTable.length - 1 ? freqTable[maxIdx + 1].freq : 0;
+        const f1 = modalClass.freq - prevFreq;
+        const f2 = modalClass.freq - nextFreq;
+        const h = classWidth;
+        const modeVal = (f1 + f2) === 0 ? L : (L + (f1 / (f1 + f2)) * h).toFixed(2);
+
+        html += `
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 math-font">
+            <h3 class="font-extrabold text-slate-900">${lang === 'en' ? 'Grouped Data Mode (Using Formula):' : 'বিন্যস্ত উপাত্তের প্রচুরক নির্ণয় (সূত্রের সাহায্যে):'}</h3>
+            <p>${lang === 'en'
+              ? `The highest frequency is <strong>${modalClass.freq}</strong>, which lies in the class <strong>${modalClass.lower} - ${modalClass.upper}</strong>.`
+              : `সারণিতে সর্বাধিক গণসংখ্যা <strong>${modalClass.freq}</strong>, যা <strong>${modalClass.lower} - ${modalClass.upper}</strong> শ্রেণিতে অবস্থিত।`}</p>
+            <p>${lang === 'en' ? 'So, Modal Class' : 'সুতরাং, প্রচুরক শ্রেণি'} = ${modalClass.lower} - ${modalClass.upper}</p>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700">
+              <li>${lang === 'en' ? 'Lower limit of modal class' : 'প্রচুরক শ্রেণির নিম্নসীমা'}, L = ${L}</li>
+              <li>f₁ = ${modalClass.freq} - ${prevFreq} = ${f1}</li>
+              <li>f₂ = ${modalClass.freq} - ${nextFreq} = ${f2}</li>
+              <li>Class Width, h = ${h}</li>
+            </ul>
+            <p class="pt-2 font-bold text-blue-950">${lang === 'en' ? 'Formula:' : 'সূত্র:'} Mode = L + [ f₁ / (f₁ + f₂) ] × h</p>
+            <p>= ${L} + [ ${f1} / (${f1} + ${f2}) ] × ${h}</p>
+            <p>= ${L} + (${f1} / ${f1 + f2}) × ${h}</p>
+            <p class="text-lg font-extrabold text-emerald-800 pt-1">${lang === 'en' ? 'Required Mode' : 'নির্ণেয় প্রচুরক'} = ${modeVal}</p>
+          </div>
+        `;
+        content.innerHTML = html;
+      }
+    }
+
+    // ==================== CHARTS (2D & 3D + SMOOTH OGIVE) ====================
+    function setChartDimension(dim) {
+      chartDim = dim;
+      document.getElementById('btn-view-2d').className = dim === '2d'
+        ? 'px-3 py-1.5 rounded-lg bg-blue-900 text-white shadow-sm transition'
+        : 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition';
+      document.getElementById('btn-view-3d').className = dim === '3d'
+        ? 'px-3 py-1.5 rounded-lg bg-blue-900 text-white shadow-sm transition'
+        : 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition';
+      document.getElementById('lb-btn-2d').className = dim === '2d' ? 'px-2.5 py-1 rounded bg-blue-600 text-white' : 'px-2.5 py-1 rounded text-slate-300';
+      document.getElementById('lb-btn-3d').className = dim === '3d' ? 'px-2.5 py-1 rounded bg-blue-600 text-white' : 'px-2.5 py-1 rounded text-slate-300';
+
+      renderChartView(currentView);
+      if (!document.getElementById('lightbox-modal').classList.contains('hidden')) {
+        document.getElementById('lightbox-img').src = document.getElementById('main-chart-canvas').toDataURL('image/png');
+      }
+    }
+
+    function setHistMethod(m) {
+      histMethod = m;
+      ['hist-m-1', 'hist-m-2', 'hist-m-3'].forEach(id => {
+        document.getElementById(id).className = 'px-3 py-1.5 rounded-lg bg-white text-sky-900 border border-sky-300';
+      });
+      const activeId = m === 'minus1_0' ? 'hist-m-1' : (m === '0_plus1' ? 'hist-m-2' : 'hist-m-3');
+      document.getElementById(activeId).className = 'px-3 py-1.5 rounded-lg bg-sky-800 text-white';
+      renderChartView('histogram');
+    }
+
+    function getContinuousIntervals() {
+      return freqTable.map(c => {
+        if (histMethod === 'minus1_0') return { ...c, cLow: c.lower - 1, cHigh: c.upper };
+        if (histMethod === '0_plus1') return { ...c, cLow: c.lower, cHigh: c.upper + 1 };
+        return { ...c, cLow: c.lower - 0.5, cHigh: c.upper + 0.5 };
+      });
+    }
+
+    function renderChartView(type) {
+      const heading = document.getElementById('chart-heading');
+      const histBar = document.getElementById('histogram-methods-bar');
+      const notesBox = document.getElementById('chart-notes-box');
+      histBar.classList.toggle('hidden', type !== 'histogram');
+
+      const titles = {
+        histogram: lang === 'en' ? `Histogram (${chartDim.toUpperCase()})` : `আয়তলেখ (${chartDim.toUpperCase()})`,
+        polygon: lang === 'en' ? `Frequency Polygon (${chartDim.toUpperCase()})` : `গণসংখ্যা বহুভুজ (${chartDim.toUpperCase()})`,
+        ogive: lang === 'en' ? `Ogive Curve (${chartDim.toUpperCase()})` : `অজিভ রেখা (${chartDim.toUpperCase()})`,
+        pie: lang === 'en' ? `Pie Chart (${chartDim.toUpperCase()})` : `পাই চিত্র (${chartDim.toUpperCase()})`
+      };
+      heading.textContent = titles[type];
+
+      const canvas = document.getElementById('main-chart-canvas');
+      const ctx = canvas.getContext('2d');
+      const W = 1000, H = 620;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, W, H);
+
+      if (type === 'pie') {
+        drawPieChart(ctx, W, H, chartDim === '3d');
+        const n = getTotalN();
+        notesBox.innerHTML = `<p class="font-bold mb-1">${lang === 'en' ? 'Sector Angles Calculation (Total = 360°):' : 'বৃত্তকলার কোণ নির্ণয় (মোট = 360°):'}</p>
+          <div class="flex flex-wrap gap-3 math-font">${freqTable.map(c => `<span>[${c.lower}-${c.upper}]: (${c.freq}/${n})×360° = <strong>${((c.freq / n) * 360).toFixed(1)}°</strong></span>`).join(' | ')}</div>`;
+        return;
+      }
+
+      // Graph Paper Grid Area (Generous left margin so Y-axis never clips)
+      const padL = 115, padR = 65, padT = 65, padB = 95;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      // Graph Paper Background & Sub-grids
+      ctx.fillStyle = '#f0fdf4';
+      ctx.fillRect(padL, padT, plotW, plotH);
+
+      const minorStep = 15;
+      ctx.strokeStyle = '#bbf7d0';
+      ctx.lineWidth = 1;
+      for (let x = padL; x <= padL + plotW; x += minorStep) {
+        ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT + plotH); ctx.stroke();
+      }
+      for (let y = padT; y <= padT + plotH; y += minorStep) {
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y); ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#4ade80';
+      ctx.lineWidth = 1.4;
+      for (let x = padL; x <= padL + plotW; x += minorStep * 5) {
+        ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT + plotH); ctx.stroke();
+      }
+      for (let y = padT; y <= padT + plotH; y += minorStep * 5) {
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y); ctx.stroke();
+      }
+
+      // Axes
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(padL, padT);
+      ctx.lineTo(padL, padT + plotH);
+      ctx.lineTo(padL + plotW, padT + plotH);
+      ctx.stroke();
+
+      // Title & Watermark
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 20px Inter, Hind Siliguri, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(titles[type], W / 2, 34);
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '600 12px Inter, Hind Siliguri, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('আমাদের গণিত | Aamader Gonit', W - 24, H - 14);
+
+      if (type === 'histogram') {
+        const contData = getContinuousIntervals();
+        const maxF = Math.max(...contData.map(c => c.freq), 5);
+        const yMax = Math.ceil(maxF * 1.18);
+        const barW = plotW / (contData.length + 1);
+        const startX = padL + barW * 0.5;
+
+        // Kink mark
+        drawKink(ctx, padL, padT + plotH, startX);
+
+        // Y-axis ticks
+        drawYAxis(ctx, padL, padT, plotH, yMax, lang === 'en' ? 'Frequency' : 'গণসংখ্যা');
+
+        contData.forEach((c, i) => {
+          const x = startX + i * barW;
+          const bH = (c.freq / yMax) * plotH;
+          const y = padT + plotH - bH;
+
+          if (chartDim === '3d' && c.freq > 0) {
+            const dx = 16, dy = -12;
+            // Right 3D face
+            ctx.fillStyle = '#1e3a8a';
+            ctx.beginPath();
+            ctx.moveTo(x + barW, y);
+            ctx.lineTo(x + barW + dx, y + dy);
+            ctx.lineTo(x + barW + dx, padT + plotH + dy);
+            ctx.lineTo(x + barW, padT + plotH);
+            ctx.closePath();
+            ctx.fill();
+
+            // Top 3D face
+            ctx.fillStyle = '#60a5fa';
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + dx, y + dy);
+            ctx.lineTo(x + barW + dx, y + dy);
+            ctx.lineTo(x + barW, y);
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          const grad = ctx.createLinearGradient(x, y, x, padT + plotH);
+          grad.addColorStop(0, '#2563eb');
+          grad.addColorStop(1, '#1d4ed8');
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, y, barW, bH);
+          ctx.strokeStyle = '#1e3a8a';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x, y, barW, bH);
+
+          // Value label on top
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 13px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(c.freq, x + barW / 2 + (chartDim === '3d' ? 6 : 0), y - (chartDim === '3d' ? 16 : 6));
+
+          // X-axis boundary ticks
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 12px Inter, sans-serif';
+          ctx.fillText(c.cLow, x, padT + plotH + 22);
+          if (i === contData.length - 1) {
+            ctx.fillText(c.cHigh, x + barW, padT + plotH + 22);
+          }
+        });
+
+        drawXAxisLabel(ctx, padL + plotW / 2, H - 34, lang === 'en' ? 'Continuous Class Interval' : 'অবিচ্ছিন্ন শ্রেণিব্যাপ্তি');
+        notesBox.innerHTML = `<p class="font-bold mb-1">${lang === 'en' ? 'Continuous Class Intervals:' : 'অবিচ্ছিন্ন শ্রেণিব্যাপ্তিসমূহ:'}</p>
+          <div class="flex flex-wrap gap-3 math-font">${contData.map(c => `<span>[${c.cLow} – ${c.cHigh}] : f = <strong>${c.freq}</strong></span>`).join(' | ')}</div>`;
+
+      } else if (type === 'polygon') {
+        const maxF = Math.max(...freqTable.map(c => c.freq), 5);
+        const yMax = Math.ceil(maxF * 1.18);
+        const stepX = plotW / (freqTable.length + 1);
+        const points = [];
+
+        // Left baseline anchor
+        points.push({ x: padL + stepX * 0.5, y: padT + plotH, label: '' });
+        freqTable.forEach((c, i) => {
+          const px = padL + stepX * (i + 1);
+          const py = padT + plotH - (c.freq / yMax) * plotH;
+          points.push({ x: px, y: py, label: c.mid, freq: c.freq });
+        });
+        // Right baseline anchor
+        points.push({ x: padL + stepX * (freqTable.length + 0.5), y: padT + plotH, label: '' });
+
+        drawKink(ctx, padL, padT + plotH, points[0].x);
+        drawYAxis(ctx, padL, padT, plotH, yMax, lang === 'en' ? 'Frequency' : 'গণসংখ্যা');
+
+        // 3D Ribbon Extrusion if 3D mode
+        if (chartDim === '3d') {
+          const dx = 16, dy = -12;
+          for (let i = 0; i < points.length - 1; i++) {
+            ctx.fillStyle = 'rgba(220, 38, 38, 0.35)';
+            ctx.beginPath();
+            ctx.moveTo(points[i].x, points[i].y);
+            ctx.lineTo(points[i].x + dx, points[i].y + dy);
+            ctx.lineTo(points[i + 1].x + dx, points[i + 1].y + dy);
+            ctx.lineTo(points[i + 1].x, points[i + 1].y);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#991b1b';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+          }
+        }
+
+        // Fill under polygon
+        ctx.fillStyle = 'rgba(220, 38, 38, 0.14)';
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        points.forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+
+        // Straight lines connecting mid-values
+        ctx.strokeStyle = '#dc2626';
+        ctx.lineWidth = 3.2;
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        points.forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+
+        // Nodes & labels
+        points.forEach((p, idx) => {
+          if (idx > 0 && idx < points.length - 1) {
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#dc2626';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 12px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`(${p.label}, ${p.freq})`, p.x, p.y - 12);
+            ctx.fillText(p.label, p.x, padT + plotH + 22);
+          }
+        });
+
+        drawXAxisLabel(ctx, padL + plotW / 2, H - 34, lang === 'en' ? 'Class Mid-Value (xᵢ)' : 'শ্রেণির মধ্যমান (xᵢ)');
+        notesBox.innerHTML = `<p class="font-bold mb-1">${lang === 'en' ? 'Polygon Coordinates (Mid-Value, Frequency):' : 'গণসংখ্যা বহুভুজের স্থানাঙ্ক (মধ্যমান, গণসংখ্যা):'}</p>
+          <div class="flex flex-wrap gap-3 math-font">${freqTable.map(c => `<span>(${c.mid}, ${c.freq})</span>`).join(' , ')}</div>`;
+
+      } else if (type === 'ogive') {
+        const n = getTotalN();
+        const yMax = Math.ceil(n * 1.12);
+        const stepX = plotW / (freqTable.length + 1);
+        const points = [];
+
+        // Start point at lower boundary of first class with cumFreq = 0
+        points.push({ x: padL + stepX * 0.7, y: padT + plotH, upper: freqTable[0].lower, cum: 0 });
+        freqTable.forEach((c, i) => {
+          const px = padL + stepX * (i + 1.5);
+          const py = padT + plotH - (c.cumFreq / yMax) * plotH;
+          points.push({ x: px, y: py, upper: c.upper, cum: c.cumFreq });
+        });
+
+        drawKink(ctx, padL, padT + plotH, points[0].x);
+        drawYAxis(ctx, padL, padT, plotH, yMax, lang === 'en' ? 'Cumulative Frequency' : 'ক্রমযোজিত গণসংখ্যা');
+
+        // Compute Monotone Cubic Spline (Smooth Freehand Curve)
+        const splinePts = computeMonotoneSpline(points);
+
+        if (chartDim === '3d') {
+          const dx = 16, dy = -12;
+          ctx.fillStyle = 'rgba(4, 120, 87, 0.25)';
+          ctx.beginPath();
+          ctx.moveTo(splinePts[0].x, splinePts[0].y);
+          splinePts.forEach(p => ctx.lineTo(p.x, p.y));
+          for (let i = splinePts.length - 1; i >= 0; i--) {
+            ctx.lineTo(splinePts[i].x + dx, splinePts[i].y + dy);
+          }
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.strokeStyle = '#065f46';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(splinePts[0].x + dx, splinePts[0].y + dy);
+          splinePts.forEach(p => ctx.lineTo(p.x + dx, p.y + dy));
+          ctx.stroke();
+        }
+
+        // Soft area fill under smooth Ogive curve
+        ctx.fillStyle = 'rgba(4, 120, 87, 0.12)';
+        ctx.beginPath();
+        ctx.moveTo(splinePts[0].x, padT + plotH);
+        splinePts.forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.lineTo(splinePts[splinePts.length - 1].x, padT + plotH);
+        ctx.closePath();
+        ctx.fill();
+
+        // Smooth Freehand Curve Stroke
+        ctx.strokeStyle = '#047857';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(splinePts[0].x, splinePts[0].y);
+        splinePts.forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+
+        // Plot points & labels
+        points.forEach((p, idx) => {
+          ctx.fillStyle = idx === 0 ? '#047857' : '#d97706';
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 12px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(p.upper, p.x, padT + plotH + 22);
+          if (idx > 0) {
+            ctx.fillText(`(${p.upper}, ${p.cum})`, p.x - 10, p.y - 12);
+          }
+        });
+
+        drawXAxisLabel(ctx, padL + plotW / 2, H - 34, lang === 'en' ? 'Upper Class Limit' : 'শ্রেণির উচ্চসীমা');
+        notesBox.innerHTML = `<p class="font-bold mb-1">${lang === 'en' ? 'Smooth Freehand Ogive Coordinates (Upper Limit, Cumulative Frequency):' : 'অজিভ বক্ররেখার স্থানাঙ্ক (উচ্চসীমা, ক্রমযোজিত গণসংখ্যা):'}</p>
+          <div class="flex flex-wrap gap-3 math-font">${freqTable.map(c => `<span>(${c.upper}, ${c.cumFreq})</span>`).join(' , ')}</div>`;
+      }
+    }
+
+    // Monotone Cubic Spline (Fritsch-Carlson) for smooth freehand Ogive curve passing strictly through every point
+    function computeMonotoneSpline(pts) {
+      const n = pts.length;
+      if (n < 2) return pts;
+      const d = [], m = new Array(n);
+      for (let i = 0; i < n - 1; i++) {
+        const dx = pts[i + 1].x - pts[i].x;
+        const dy = pts[i + 1].y - pts[i].y;
+        d.push(dx === 0 ? 0 : dy / dx);
+      }
+      m[0] = d[0];
+      m[n - 1] = d[n - 2];
+      for (let i = 1; i < n - 1; i++) {
+        if (d[i - 1] * d[i] <= 0) {
+          m[i] = 0;
+        } else {
+          m[i] = (d[i - 1] + d[i]) / 2;
+        }
+      }
+      for (let i = 0; i < n - 1; i++) {
+        if (d[i] === 0) {
+          m[i] = 0;
+          m[i + 1] = 0;
+        } else {
+          const alpha = m[i] / d[i];
+          const beta = m[i + 1] / d[i];
+          const s = alpha * alpha + beta * beta;
+          if (s > 9) {
+            const tau = 3 / Math.sqrt(s);
+            m[i] = tau * alpha * d[i];
+            m[i + 1] = tau * beta * d[i];
+          }
+        }
+      }
+
+      const result = [];
+      const stepsPerSeg = 24;
+      for (let i = 0; i < n - 1; i++) {
+        const p0 = pts[i], p1 = pts[i + 1];
+        const h = p1.x - p0.x;
+        for (let s = 0; s <= (i === n - 2 ? stepsPerSeg : stepsPerSeg - 1); s++) {
+          const t = s / stepsPerSeg;
+          const t2 = t * t, t3 = t2 * t;
+          const h00 = 2 * t3 - 3 * t2 + 1;
+          const h10 = t3 - 2 * t2 + t;
+          const h01 = -2 * t3 + 3 * t2;
+          const h11 = t3 - t2;
+          result.push({
+            x: p0.x + t * h,
+            y: h00 * p0.y + h10 * h * m[i] + h01 * p1.y + h11 * h * m[i + 1]
+          });
+        }
+      }
+      return result;
+    }
+
+    function drawYAxis(ctx, padL, padT, plotH, yMax, label) {
+      const ticks = 5;
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      for (let i = 0; i <= ticks; i++) {
+        const val = Math.round((yMax / ticks) * i);
+        const y = padT + plotH - (val / yMax) * plotH;
+        ctx.fillText(val, padL - 12, y + 4);
+        ctx.beginPath();
+        ctx.moveTo(padL - 5, y);
+        ctx.lineTo(padL, y);
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      ctx.save();
+      ctx.translate(32, padT + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = 'center';
+      ctx.font = 'bold 14px Inter, Hind Siliguri, sans-serif';
+      ctx.fillText(label, 0, 0);
+      ctx.restore();
+    }
+
+    function drawXAxisLabel(ctx, x, y, text) {
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 14px Inter, Hind Siliguri, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(text, x, y);
+    }
+
+    function drawKink(ctx, x0, y0, x1) {
+      if (x1 - x0 < 30) return;
+      const mid = (x0 + x1) / 2;
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(mid - 10, y0);
+      ctx.lineTo(mid - 5, y0 - 7);
+      ctx.lineTo(mid + 5, y0 + 7);
+      ctx.lineTo(mid + 10, y0);
+      ctx.stroke();
+    }
+
+    function drawPieChart(ctx, W, H, is3D) {
+      const palette = ['#1d4ed8', '#047857', '#d97706', '#dc2626', '#7c3aed', '#0891b2', '#ea580c', '#4338ca'];
+      const n = getTotalN();
+      const cx = W * 0.38, cy = H * 0.52;
+      const rx = 200, ry = is3D ? 135 : 200;
+      const depth = 34;
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 20px Inter, Hind Siliguri, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(lang === 'en' ? `Pie Chart (${is3D ? '3D' : '2D'})` : `পাই চিত্র (${is3D ? '3D' : '2D'})`, W / 2, 36);
+
+      // 3D Cylinder Extrusion Bottom
+      if (is3D) {
+        let startA = -Math.PI / 2;
+        freqTable.forEach((c, idx) => {
+          const slice = (c.freq / n) * Math.PI * 2;
+          const endA = startA + slice;
+          const color = palette[idx % palette.length];
+          ctx.fillStyle = darkenHex(color, 0.68);
+          ctx.beginPath();
+          ctx.ellipse(cx, cy + depth, rx, ry, 0, startA, endA);
+          ctx.lineTo(cx + rx * Math.cos(endA), cy + ry * Math.sin(endA));
+          ctx.ellipse(cx, cy, rx, ry, 0, endA, startA, true);
+          ctx.closePath();
+          ctx.fill();
+          startA = endA;
+        });
+      }
+
+      // Top Surface Slices
+      let startAngle = -Math.PI / 2;
+      freqTable.forEach((c, idx) => {
+        const slice = (c.freq / n) * Math.PI * 2;
+        const endAngle = startAngle + slice;
+        const color = palette[idx % palette.length];
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.ellipse(cx, cy, rx, ry, 0, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Percentage inside slice
+        const midAngle = startAngle + slice / 2;
+        const pct = ((c.freq / n) * 100).toFixed(1);
+        if (parseFloat(pct) >= 5) {
+          const lx = cx + (rx * 0.65) * Math.cos(midAngle);
+          const ly = cy + (ry * 0.65) * Math.sin(midAngle);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 12px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(`${pct}%`, lx, ly + 4);
+        }
+        startAngle = endAngle;
+      });
+
+      // Legend on Right
+      const legX = W * 0.66;
+      let legY = 110;
+      ctx.textAlign = 'left';
+      freqTable.forEach((c, idx) => {
+        const color = palette[idx % palette.length];
+        const deg = ((c.freq / n) * 360).toFixed(1);
+        ctx.fillStyle = color;
+        ctx.fillRect(legX, legY - 12, 16, 16);
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 13px Inter, sans-serif';
+        ctx.fillText(`${c.lower}-${c.upper} : f=${c.freq} (${deg}°)`, legX + 24, legY + 1);
+        legY += 28;
+      });
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '600 12px Inter, Hind Siliguri, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('আমাদের গণিত | Aamader Gonit', W - 24, H - 14);
+    }
+
+    function darkenHex(hex, factor) {
+      const num = parseInt(hex.replace('#', ''), 16);
+      const r = Math.floor(((num >> 16) & 255) * factor);
+      const g = Math.floor(((num >> 8) & 255) * factor);
+      const b = Math.floor((num & 255) * factor);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function downloadCurrentChart() {
+      const canvas = document.getElementById('main-chart-canvas');
+      const link = document.createElement('a');
+      link.download = `aamader-gonit-${currentView}-${chartDim}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // ==================== LIGHTBOX ZOOM ====================
+    function openLightbox() {
+      const canvas = document.getElementById('main-chart-canvas');
+      const img = document.getElementById('lightbox-img');
+      img.src = canvas.toDataURL('image/png');
+      lbZoom = 1;
+      img.style.transform = 'scale(1)';
+      document.getElementById('lb-zoom-label').textContent = '100%';
+      document.getElementById('lightbox-title').textContent = document.getElementById('chart-heading').textContent;
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.add('hidden');
+    }
+
+    function adjustLightboxZoom(delta) {
+      lbZoom = Math.min(3, Math.max(0.5, lbZoom + delta));
+      document.getElementById('lightbox-img').style.transform = `scale(${lbZoom})`;
+      document.getElementById('lb-zoom-label').textContent = `${Math.round(lbZoom * 100)}%`;
+    }
+
+    function resetLightboxZoom() {
+      lbZoom = 1;
+      document.getElementById('lightbox-img').style.transform = 'scale(1)';
+      document.getElementById('lb-zoom-label').textContent = '100%';
+    }
+
+    // ==================== CAMERA & INTERACTIVE CROPPER + OCR ====================
+    let cameraStream = null;
+    let uploadedImgObj = null;
+    let cropRect = null;
+    let isDraggingCrop = false;
+    let cropStart = { x: 0, y: 0 };
+    let refZoom = 1;
+
+    async function openLiveCamera() {
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        document.getElementById('camera-video').srcObject = cameraStream;
+        document.getElementById('camera-modal').classList.remove('hidden');
+      } catch (err) {
+        alert(lang === 'en' ? 'Camera access unavailable or denied. Please use Upload Image.' : 'ক্যামেরা চালু করা যায়নি। অনুগ্রহ করে ছবি আপলোড ব্যবহার করুন।');
+      }
+    }
+
+    function closeLiveCamera() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(t => t.stop());
+        cameraStream = null;
+      }
+      document.getElementById('camera-modal').classList.add('hidden');
+    }
+
+    function captureCameraPhoto() {
+      const video = document.getElementById('camera-video');
+      const tmp = document.createElement('canvas');
+      tmp.width = video.videoWidth;
+      tmp.height = video.videoHeight;
+      tmp.getContext('2d').drawImage(video, 0, 0);
+      const dataUrl = tmp.toDataURL('image/png');
+      closeLiveCamera();
+      loadImageIntoCropper(dataUrl);
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => loadImageIntoCropper(ev.target.result);
+      reader.readAsDataURL(file);
+    }
+
+    function loadImageIntoCropper(dataUrl) {
+      const img = new Image();
+      img.onload = () => {
+        uploadedImgObj = img;
+        document.getElementById('ref-image-preview').src = dataUrl;
+        document.getElementById('ref-image-panel').classList.remove('hidden');
+        reopenCropper();
+      };
+      img.src = dataUrl;
+    }
+
+    function reopenCropper() {
+      if (!uploadedImgObj) return;
+      const canvas = document.getElementById('crop-canvas');
+      const maxW = 760;
+      const scale = uploadedImgObj.width > maxW ? maxW / uploadedImgObj.width : 1;
+      canvas.width = uploadedImgObj.width * scale;
+      canvas.height = uploadedImgObj.height * scale;
+      cropRect = null;
+      drawCropCanvas();
+      document.getElementById('crop-modal').classList.remove('hidden');
+    }
+
+    function closeCropModal() {
+      document.getElementById('crop-modal').classList.add('hidden');
+    }
+
+    function resetCropSelection() {
+      cropRect = null;
+      drawCropCanvas();
+    }
+
+    function drawCropCanvas() {
+      const canvas = document.getElementById('crop-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(uploadedImgObj, 0, 0, canvas.width, canvas.height);
+
+      if (cropRect && cropRect.w > 5 && cropRect.h > 5) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+          uploadedImgObj,
+          (cropRect.x / canvas.width) * uploadedImgObj.width,
+          (cropRect.y / canvas.height) * uploadedImgObj.height,
+          (cropRect.w / canvas.width) * uploadedImgObj.width,
+          (cropRect.h / canvas.height) * uploadedImgObj.height,
+          cropRect.x, cropRect.y, cropRect.w, cropRect.h
+        );
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(cropRect.x, cropRect.y, cropRect.w, cropRect.h);
+      }
+    }
+
+    // Pointer Events for Crop Selection
+    const cropCanvasEl = document.getElementById('crop-canvas');
+    function getCanvasCoords(e) {
+      const rect = cropCanvasEl.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: ((clientX - rect.left) / rect.width) * cropCanvasEl.width,
+        y: ((clientY - rect.top) / rect.height) * cropCanvasEl.height
+      };
+    }
+
+    cropCanvasEl.addEventListener('mousedown', (e) => { isDraggingCrop = true; cropStart = getCanvasCoords(e); });
+    cropCanvasEl.addEventListener('mousemove', (e) => {
+      if (!isDraggingCrop) return;
+      const pos = getCanvasCoords(e);
+      cropRect = {
+        x: Math.min(cropStart.x, pos.x),
+        y: Math.min(cropStart.y, pos.y),
+        w: Math.abs(pos.x - cropStart.x),
+        h: Math.abs(pos.y - cropStart.y)
+      };
+      drawCropCanvas();
+    });
+    window.addEventListener('mouseup', () => { isDraggingCrop = false; });
+
+    cropCanvasEl.addEventListener('touchstart', (e) => { isDraggingCrop = true; cropStart = getCanvasCoords(e); }, { passive: true });
+    cropCanvasEl.addEventListener('touchmove', (e) => {
+      if (!isDraggingCrop) return;
+      const pos = getCanvasCoords(e);
+      cropRect = {
+        x: Math.min(cropStart.x, pos.x),
+        y: Math.min(cropStart.y, pos.y),
+        w: Math.abs(pos.x - cropStart.x),
+        h: Math.abs(pos.y - cropStart.y)
+      };
+      drawCropCanvas();
+    }, { passive: true });
+    window.addEventListener('touchend', () => { isDraggingCrop = false; });
+
+    async function processCroppedImage(useFull) {
+      closeCropModal();
+      const tmp = document.createElement('canvas');
+      const ctx = tmp.getContext('2d');
+      const cropCanvas = document.getElementById('crop-canvas');
+
+      if (!useFull && cropRect && cropRect.w > 10 && cropRect.h > 10) {
+        const sx = (cropRect.x / cropCanvas.width) * uploadedImgObj.width;
+        const sy = (cropRect.y / cropCanvas.height) * uploadedImgObj.height;
+        const sw = (cropRect.w / cropCanvas.width) * uploadedImgObj.width;
+        const sh = (cropRect.h / cropCanvas.height) * uploadedImgObj.height;
+        tmp.width = sw;
+        tmp.height = sh;
+        ctx.drawImage(uploadedImgObj, sx, sy, sw, sh, 0, 0, sw, sh);
+      } else {
+        tmp.width = uploadedImgObj.width;
+        tmp.height = uploadedImgObj.height;
+        ctx.drawImage(uploadedImgObj, 0, 0);
+      }
+
+      const croppedUrl = tmp.toDataURL('image/png');
+      document.getElementById('ref-image-preview').src = croppedUrl;
+
+      const statusBox = document.getElementById('ocr-status-box');
+      const statusText = document.getElementById('ocr-status-text');
+      statusBox.classList.remove('hidden');
+      statusText.textContent = lang === 'en' ? 'Scanning numbers from selected area...' : 'নির্বাচিত অংশ থেকে সংখ্যা স্ক্যান করা হচ্ছে...';
+
+      try {
+        const result = await Tesseract.recognize(croppedUrl, 'eng+ben');
+        const rawText = normalizeDigits(result.data.text || '');
+
+        if (inputMode === 'ungrouped') {
+          const matches = rawText.match(/-?\d+(\.\d+)?/g);
+          if (matches && matches.length > 0) {
+            const inlineStr = matches.join(', ');
+            document.getElementById('ungrouped-textarea').value = inlineStr;
+            document.getElementById('extracted-text-preview').textContent = inlineStr;
+            document.getElementById('extracted-copy-bar').classList.remove('hidden');
+            processUngroupedData();
+          } else {
+            alert(lang === 'en' ? 'No numbers detected. You can read from the reference image above.' : 'কোনো সংখ্যা শনাক্ত হয়নি। উপরের রেফারেন্স ছবি দেখে টাইপ করতে পারেন।');
+          }
+        } else {
+          // Grouped mode: look for pairs like 41-50 5
+          const lines = rawText.split(/
++/).map(l => l.trim()).filter(Boolean);
+          const pairs = [];
+          lines.forEach(line => {
+            const m = line.match(/(\d+)\s*[-–—]\s*(\d+)\s+(\d+)/);
+            if (m) pairs.push({ interval: `${m[1]}-${m[2]}`, freq: m[3] });
+          });
+          if (pairs.length > 0) {
+            const tbody = document.getElementById('grouped-rows-body');
+            tbody.innerHTML = '';
+            pairs.forEach(p => addGroupedRow(p.interval, p.freq));
+            const summary = pairs.map(p => `${p.interval}: ${p.freq}`).join(', ');
+            document.getElementById('extracted-text-preview').textContent = summary;
+            document.getElementById('extracted-copy-bar').classList.remove('hidden');
+            processGroupedData();
+          } else {
+            const nums = rawText.match(/\d+/g);
+            if (nums) {
+              document.getElementById('extracted-text-preview').textContent = nums.join(', ');
+              document.getElementById('extracted-copy-bar').classList.remove('hidden');
+            }
+          }
+        }
+      } catch (err) {
+        alert(lang === 'en' ? 'Offline OCR unavailable. Please type values using the reference image above.' : 'অফলাইনে OCR কাজ করেনি। উপরের রেফারেন্স ছবি দেখে মানগুলো লিখুন।');
+      } finally {
+        statusBox.classList.add('hidden');
+      }
+    }
+
+    function copyExtractedData() {
+      const txt = document.getElementById('extracted-text-preview').textContent;
+      navigator.clipboard.writeText(txt).then(() => {
+        alert(lang === 'en' ? 'Copied to clipboard!' : 'ক্লিপবোর্ডে কপি হয়েছে!');
+      });
+    }
+
+    function zoomRefImage(delta) {
+      refZoom = Math.min(2.5, Math.max(0.6, refZoom + delta));
+      document.getElementById('ref-image-preview').style.transform = `scale(${refZoom})`;
+    }
+
+    function resetRefZoom() {
+      refZoom = 1;
+      document.getElementById('ref-image-preview').style.transform = 'scale(1)';
+    }
+
+    // Initialize App on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('ungrouped-textarea').value = rawNumbers.join(', ');
+      processUngroupedData();
+      setLang('en');
+    });
+  </script>
+</body>
+</html>
